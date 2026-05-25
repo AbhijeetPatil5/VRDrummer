@@ -1,7 +1,53 @@
 #include <iostream>
+#include <array>
 #include <vector>
+#include <string_view>
 #include <openxr/openxr.h>
 #include "RtMidi.h"
+
+// Class to hold the drumkit information.
+class simmonsTitan50B_EX{
+    private:
+    // Create an array of 128 elements covering all possible MIDI notes 0-127
+    // Initialize all to "Unknown" or an empty string by default
+    std::array<std::string_view, 128> drumMap;
+
+    public: 
+    simmonsTitan50B_EX() {
+        // Initialize the drum map with "Unknown" for all MIDI note numbers.
+        drumMap.fill("Unknown");
+
+        // Map MIDI note numbers to specific drum pads on the Simmons Titan 50 B-EX
+        drumMap[36] = "Kick Drum";                  // C2
+        drumMap[38] = "Snare Drum - Center";        // D2
+        drumMap[40] = "Snare Drum - Rim";           // E2
+        drumMap[41] = "Tom 4";                      // F2
+        drumMap[42] = "Hi-Hat - Closed";            // F#2
+        drumMap[43] = "Tom 3";                      // G2
+        drumMap[44] = "Hi-Hat - Pedal";             // G#2
+        drumMap[45] = "Tom 2";                      // A2
+        drumMap[46] = "Hi-Hat - Open";              // A#2
+        drumMap[48] = "Tom 1";                      // C3
+        drumMap[49] = "Crash";                      // C#3
+        drumMap[51] = "Ride";                       // D#3
+        drumMap[57] = "Crash 2";                    // A3
+        drumMap[85] = "Hi-Hat - Splash";            // C#6
+        drumMap[86] = "Hi-Hat - Semi-Open";         // D6
+    }
+
+    // Function to get the drum pad name based on the MIDI note number.
+    std::string_view getDrumPad(int midiNote) const {
+        
+        // Return an error message for out-of-range MIDI notes
+        if (midiNote < 0 || midiNote > 127) {
+            return "Invalid MIDI Note";
+        }
+
+        // Return the drum pad name for the given MIDI note number
+        return drumMap[midiNote];
+    }
+};
+
 
 // Function to trigger RtMidi's callback mechanism. It will be called whenever a MIDI message is received.
 void myMidiCallback(double deltaTime, std::vector<unsigned char> *message, void *userData) {
