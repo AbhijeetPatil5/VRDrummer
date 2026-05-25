@@ -66,7 +66,11 @@ void myMidiCallback(double deltaTime, std::vector<unsigned char> *message, void 
 
     // If status is 0x90 i.e. "Note On" and velocity is greater than 0, we know it's a true hit.
     if ((status & 0xF0) == 0x90 && velocity > 0) {
-        std::cout << "Drum Hit! Pad Note: " << note 
+
+        // Cast the userData pointer back to our simmonsTitan50B_EX class to access the drum map.
+        simmonsTitan50B_EX* drumKit = static_cast<simmonsTitan50B_EX*>(userData);
+
+        std::cout << "Drum Hit! " << drumKit->getDrumPad(note)
                   << " | Velocity: " << velocity << std::endl;
     }
 }
@@ -87,7 +91,6 @@ int main() {
         error.printMessage();
         return -1;
     }
-
 
     // Scan USB Ports for the MIDI devices and get the count of available MIDI input ports.
     unsigned int nPorts = midiIn->getPortCount();
@@ -110,16 +113,20 @@ int main() {
     unsigned int portToOpen = 0;        // We default to Port 0. 
     std::cout << "\nOpening Port " << portToOpen << "..." << std::endl;
     midiIn->openPort(portToOpen);
-    
+
+     // Create an instance of the Simmons Titan 50B EX drum kit.
+    simmonsTitan50B_EX connectedDrumKit;
+
     // Set the callback function to handle incoming MIDI messages.
-    midiIn->setCallback(&myMidiCallback);
+    // Pass a pointer to the connectedDrumKit instance as user data to use it inside the callback.
+    midiIn->setCallback(&myMidiCallback, &connectedDrumKit);
 
     // Ignore MIDI clock and system messages.
     midiIn->ignoreTypes(true, true, true);
 
     // Inform the user that the application is now listening for MIDI messages.
     std::cout << "\nListening for drum hits... Press Enter to quit.\n";
-    
+
     // Wait for the user to press Enter before exiting.
     // This keeps the application running and able to receive MIDI messages.
     std::cin.get();
