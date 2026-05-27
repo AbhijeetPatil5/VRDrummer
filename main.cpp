@@ -8,44 +8,49 @@
 // Class to hold the drumkit information.
 class simmonsTitan50B_EX{
     private:
-    // Create an array of 128 elements covering all possible MIDI notes 0-127
-    // Initialize all to "Unknown" or an empty string by default
-    std::array<std::string_view, 128> drumMap;
+        // Create an array of 128 elements covering all possible MIDI notes 0-127
+        // Initialize all to "Unknown" or an empty string by default
+        static constexpr std::array<std::string_view, 128> drumMap = []() {
+            std::array<std::string_view, 128> tempDrumMap{};
+
+            for (int i = 0; i < 128; ++i) {
+                tempDrumMap[i] = "Unknown";
+            }
+
+            // Map MIDI note numbers to specific drum pads on the Simmons Titan 50 B-EX
+            tempDrumMap[36] = "Kick Drum";                  // C2
+            tempDrumMap[38] = "Snare Drum - Center";        // D2
+            tempDrumMap[40] = "Snare Drum - Rim";           // E2
+            tempDrumMap[41] = "Tom 4";                      // F2
+            tempDrumMap[42] = "Hi-Hat - Closed";            // F#2
+            tempDrumMap[43] = "Tom 3";                      // G2
+            tempDrumMap[44] = "Hi-Hat - Pedal";             // G#2
+            tempDrumMap[45] = "Tom 2";                      // A2
+            tempDrumMap[46] = "Hi-Hat - Open";              // A#2
+            tempDrumMap[48] = "Tom 1";                      // C3
+            tempDrumMap[49] = "Crash";                      // C#3
+            tempDrumMap[51] = "Ride";                       // D#3
+            tempDrumMap[57] = "Crash 2";                    // A3
+            tempDrumMap[85] = "Hi-Hat - Splash";            // C#6
+            tempDrumMap[86] = "Hi-Hat - Semi-Open";         // D6
+
+            return tempDrumMap;            
+        }();
 
     public: 
-    simmonsTitan50B_EX() {
-        // Initialize the drum map with "Unknown" for all MIDI note numbers.
-        drumMap.fill("Unknown");
+        simmonsTitan50B_EX() = default;
 
-        // Map MIDI note numbers to specific drum pads on the Simmons Titan 50 B-EX
-        drumMap[36] = "Kick Drum";                  // C2
-        drumMap[38] = "Snare Drum - Center";        // D2
-        drumMap[40] = "Snare Drum - Rim";           // E2
-        drumMap[41] = "Tom 4";                      // F2
-        drumMap[42] = "Hi-Hat - Closed";            // F#2
-        drumMap[43] = "Tom 3";                      // G2
-        drumMap[44] = "Hi-Hat - Pedal";             // G#2
-        drumMap[45] = "Tom 2";                      // A2
-        drumMap[46] = "Hi-Hat - Open";              // A#2
-        drumMap[48] = "Tom 1";                      // C3
-        drumMap[49] = "Crash";                      // C#3
-        drumMap[51] = "Ride";                       // D#3
-        drumMap[57] = "Crash 2";                    // A3
-        drumMap[85] = "Hi-Hat - Splash";            // C#6
-        drumMap[86] = "Hi-Hat - Semi-Open";         // D6
-    }
-
-    // Function to get the drum pad name based on the MIDI note number.
-    std::string_view getDrumPad(int midiNote) const {
+        // Function to get the drum pad name based on the MIDI note number.
+        std::string_view getDrumPad(int midiNote) const {
         
-        // Return an error message for out-of-range MIDI notes
-        if (midiNote < 0 || midiNote > 127) {
-            return "Invalid MIDI Note";
-        }
+            // Return an error message for out-of-range MIDI notes
+            if (midiNote < 0 || midiNote > 127) {
+                return "Invalid MIDI Note";
+            }
 
-        // Return the drum pad name for the given MIDI note number
-        return drumMap[midiNote];
-    }
+            // Return the drum pad name for the given MIDI note number
+            return drumMap[midiNote];
+        }
 };
 
 
