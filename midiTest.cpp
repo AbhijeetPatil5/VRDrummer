@@ -2,7 +2,6 @@
 #include <array>
 #include <vector>
 #include <string_view>
-#include <openxr/openxr.h>
 #include "RtMidi.h"
 
 // Class to hold the drumkit information.

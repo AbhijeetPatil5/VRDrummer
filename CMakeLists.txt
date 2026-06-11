@@ -35,8 +35,12 @@ set(RTMIDI_TARGETNAME_UNINSTALL "rtmidi_uninstall" CACHE STRING "" FORCE)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(rtmidi)
 
-# 6. Add the executable target for the VRDrummer application
-add_executable(VRDrummer main.cpp)
+# 6a. Add the executable target for the MIDI test application
+add_executable(midiTest midiTest.cpp)
+# 6b. Link the RtMidi libraries to the executable
+target_link_libraries(midiTest PRIVATE rtmidi)
 
-# 7. Link the OpenXR loader and RtMidi libraries to the executable
-target_link_libraries(VRDrummer PRIVATE openxr_loader rtmidi)
+# 7a. Add the executable target for the VR test application
+#add_executable(vrTest vrTest.cpp)
+# 7b. Link the OpenXR loader to the executable
+#target_link_libraries(vrTest PRIVATE openxr_loader)
