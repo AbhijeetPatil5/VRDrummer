@@ -41,6 +41,6 @@ add_executable(midiTest midiTest.cpp)
 target_link_libraries(midiTest PRIVATE rtmidi)
 
 # 7a. Add the executable target for the VR test application
-#add_executable(vrTest vrTest.cpp)
+add_executable(vrTest vrTest.cpp)
 # 7b. Link the OpenXR loader to the executable
-#target_link_libraries(vrTest PRIVATE openxr_loader)
+target_link_libraries(vrTest PRIVATE openxr_loader)
