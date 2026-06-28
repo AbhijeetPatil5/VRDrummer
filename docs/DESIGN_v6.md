@@ -30,8 +30,7 @@
 
 VRDrummer teaches novice drummers using mixed reality. The player wears a Meta Quest 3S,
 sees their real Simmons Titan 50 B-EX through passthrough, and receives circular glow cues
-on each physical pad. Strikes are captured via real drumsticks (USB MIDI — not VR
-controllers). Timing feedback and song charts come **last**, after perception works reliably.
+on each physical pad. Strikes are captured via real drumsticks (not VR controllers).
 
 ### Nomenclature
 
@@ -74,21 +73,21 @@ Substitutes are acceptable; this is the reference configuration.
 
 ### Perception MVP (First "It Works" Moment)
 
-- Live passthrough camera frames decoded on PC (RTX 4080 Super)
-- Drum kit localised; all 14 Simmons pads identified
+- Live passthrough camera frames decoded on PC
+- Drum kit localised; all 15 different drum pad hits identified
 - Stable pad poses via pluggable pose filter (default EKF)
 - Glow circles composited over real pads via OpenXR passthrough layers
-- **No chart or timing logic required**
+- No music chart or drum pad hit timing logic required
 
 ### Design Constraints (claims vs facts)
 
-| Claim | Status |
-|-------|--------|
-| PCA frames available to PC OpenXR app via `XR_FB_passthrough` | **False** — compositor display only; use camera-fgs or WebRTC |
-| camera-fgs uses software H.264 encode | **False** — already HW MediaCodec; Tier 2 upgrade = HEVC + tuning |
-| Meta PCA API provides stereo extrinsics | **False** — per-camera intrinsics only; need `cv::stereoCalibrate` harness |
-| TensorRT IOBinding == ORT IOBinding | **False** — Tier 2 target uses native TRT `enqueueV3` bindings |
-| Tier 2 CV total ~45–55 ms = end-to-end glass-to-glow | **Partial** — inference path only; full loop ~70–90 ms typical |
+| Claim                                                         | Status                                                                     |
+| ---------------------------------------------------------------| ----------------------------------------------------------------------------|
+| PCA frames available to PC OpenXR app via `XR_FB_passthrough` | **False** — compositor display only; use camera-fgs or WebRTC              |
+| camera-fgs uses software H.264 encode                         | **False** — already HW MediaCodec; Tier 2 upgrade = HEVC + tuning          |
+| Meta PCA API provides stereo extrinsics                       | **False** — per-camera intrinsics only; need `cv::stereoCalibrate` harness |
+| TensorRT IOBinding == ORT IOBinding                           | **False** — Tier 2 target uses native TRT `enqueueV3` bindings             |
+| Tier 2 CV total ~45–55 ms = end-to-end glass-to-glow          | **Partial** — inference path only; full loop ~70–90 ms typical             |
 
 ---
 
@@ -112,17 +111,17 @@ No video is sent back for display.
 
 ### Dual Pipeline (Critical — Do Not Conflate)
 
-| Pipeline | Direction | Payload |
-|----------|-----------|---------|
-| **CV video** | Quest → PC | Compressed PCA frames (~8–20 Mbps) |
-| **MR display** | PC → Quest | Passthrough compositor + glow geometry via Link |
-| **Pad poses** | PC internal | 14 × `{position, normal, radius}` — **not networked** |
+| Pipeline       | Direction   | Payload                                               |
+| ----------------| -------------| -------------------------------------------------------|
+| **CV video**   | Quest → PC  | Compressed PCA frames (~8–20 Mbps)                    |
+| **MR display** | PC → Quest  | Passthrough compositor + glow geometry via Link       |
+| **Pad poses**  | PC internal | 14 × `{position, normal, radius}` — **not networked** |
 
 ### System Diagram (Target State)
 
 ```mermaid
 flowchart TB
-    subgraph quest [Quest3S]
+    subgraph quest [VR Headset]
         PCA_L[PCA_left]
         PCA_R[PCA_right]
         MC[MediaCodec_encoder]

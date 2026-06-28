@@ -19,6 +19,7 @@
 8. [Build Roadmap](#8-build-roadmap)
 9. [Latency and Bandwidth Budget](#9-latency-and-bandwidth-budget)
 10. [Implementation Reference](#10-implementation-reference)
+
 11. [Developer Learning Path](#11-developer-learning-path)
 12. [Open Questions](#12-open-questions)
 13. [Glossary and Document History](#13-glossary-and-document-history)
