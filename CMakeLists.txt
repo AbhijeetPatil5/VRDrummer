@@ -1,7 +1,14 @@
+# 1. Minimum version requirement for CMake
 cmake_minimum_required(VERSION 3.20)
+
+# 2. Project Name
 project(VRDrummer)
 
-# --- 1. Fetch OpenXR SDK ---
+# 3. Add the C++ Standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# 4. Fetch OpenXR SDK
 include(FetchContent)
 FetchContent_Declare(
     openxr
@@ -12,7 +19,7 @@ set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(BUILD_CONFORMANCE_TESTS OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(openxr)
 
-# --- 2. Fetch RtMidi ---
+# 5. Fetch RtMidi
 FetchContent_Declare(
     rtmidi
     GIT_REPOSITORY https://github.com/thestk/rtmidi.git
@@ -28,9 +35,12 @@ set(RTMIDI_TARGETNAME_UNINSTALL "rtmidi_uninstall" CACHE STRING "" FORCE)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(rtmidi)
 
-# --- 3. Our Application ---
-add_executable(VRDrummer main.cpp)
+# 6a. Add the executable target for the MIDI test application
+add_executable(midiTest midiTest.cpp)
+# 6b. Link the RtMidi libraries to the executable
+target_link_libraries(midiTest PRIVATE rtmidi)
 
-# --- 4. Linkage ---
-# We now link BOTH the openxr_loader and rtmidi libraries
-target_link_libraries(VRDrummer PRIVATE openxr_loader rtmidi)
+# 7a. Add the executable target for the VR test application
+add_executable(vrTest vrTest.cpp)
+# 7b. Link the OpenXR loader to the executable
+target_link_libraries(vrTest PRIVATE openxr_loader)
